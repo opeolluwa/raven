@@ -5,33 +5,33 @@ use egg_mode::media::{get_status, media_types, set_metadata, upload_media, Progr
 use egg_mode::tweet::DraftTweet;
 
 use std::io::{stdout, Write};
-use std::path::PathBuf;
+// use std::path::PathBuf;
 use std::time::Duration;
 
-use structopt::StructOpt;
+// use structopt::StructOpt;
 use tokio::time::sleep;
 
-#[derive(StructOpt)]
-/// A simple CLI for uploading a tweet, optionally with media attched
-struct Args {
-    /// Text of the tweet
-    text: String,
-    /// Optionally attach media to tweet
-    #[structopt(long, parse(from_os_str))]
-    media: Option<PathBuf>,
-    /// Optionally set alt-text for media
-    #[structopt(long)]
-    alt_text: Option<String>,
-}
+// #[derive(StructOpt)]
+// /// A simple CLI for uploading a tweet, optionally with media attched
+// struct Args {
+//     /// Text of the tweet
+//     text: String,
+//     /// Optionally attach media to tweet
+//     #[structopt(long, parse(from_os_str))]
+//     media: Option<PathBuf>,
+//     /// Optionally set alt-text for media
+//     #[structopt(long)]
+//     alt_text: Option<String>,
+// }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let args = Args::from_args();
+
+    let draft_tweet = &tweets::tweets()[0];
     let config = config::Config::load().await;
+    let tweet = DraftTweet::new(draft_tweet.quote);
 
-    let mut tweet = DraftTweet::new(args.text.clone());
-
-    if let Some(path) = args.media {
+    /* if let Some(path) = args.media {
         println!("Uploading media from '{}'", path.display());
         let typ = match path.extension().and_then(|os| os.to_str()).unwrap_or("") {
             "jpg" | "jpeg" => media_types::image_jpg(),
@@ -72,10 +72,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
-
+ */
     tweet.send(&config.token).await?;
-    let rr = &tweets::tweets()[0];
-    println!(" tweets {:?}",  rr);
-    println!("Sent tweet: '{}'", args.text);
+    
+    // println!("Sent tweet: '{}'", args.text);
     Ok(())
 }
