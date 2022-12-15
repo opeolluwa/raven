@@ -6,8 +6,6 @@
 //that are unnecessary
 #![allow(dead_code)]
 
-use egg_mode;
-use std;
 use std::io::{Read, Write};
 
 pub use yansi::Paint;
@@ -54,7 +52,7 @@ impl Config {
             let mut iter = config.split('\n');
 
             username = iter.next().unwrap().to_string();
-            user_id = u64::from_str_radix(&iter.next().unwrap(), 10).unwrap();
+            user_id = u64::from_str_radix(iter.next().unwrap(), 10).unwrap();
             let access_token = egg_mode::KeyPair::new(
                 iter.next().unwrap().to_string(),
                 iter.next().unwrap().to_string(),
@@ -81,7 +79,7 @@ impl Config {
 
             let mut pin = String::new();
             std::io::stdin().read_line(&mut pin).unwrap();
-            println!("");
+            println!();
 
             let tok_result = egg_mode::auth::access_token(con_token, &request_token, pin)
                 .await
@@ -116,8 +114,8 @@ impl Config {
         //TODO: Is there a better way to query whether a file exists?
         if std::fs::metadata("twitter_settings").is_ok() {
             Some(Config {
-                token: token,
-                user_id: user_id,
+                token,
+                user_id,
                 screen_name: username,
             })
         } else {
