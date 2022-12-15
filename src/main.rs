@@ -1,4 +1,5 @@
 mod config;
+mod tweets;
 
 use egg_mode::media::{get_status, media_types, set_metadata, upload_media, ProgressInfo};
 use egg_mode::tweet::DraftTweet;
