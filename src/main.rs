@@ -74,6 +74,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     tweet.send(&config.token).await?;
+    let rr = &tweets::tweets()[0];
+    println!(" tweets {:?}",  rr);
     println!("Sent tweet: '{}'", args.text);
     Ok(())
 }
