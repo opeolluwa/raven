@@ -7,7 +7,9 @@
 #![allow(dead_code)]
 
 use std::io::{Read, Write};
-
+extern crate dotenv;
+use dotenv::dotenv;
+// use std::env;
 pub use yansi::Paint;
 
 //This is not an example that can be built with cargo! This is some helper code for the other
@@ -33,6 +35,12 @@ impl Config {
     /// twitter_settings file. Idealy we would recurse, but that requires boxing
     /// the output which doesn't seem worthwhile
     async fn load_inner() -> Option<Self> {
+        dotenv().ok();
+        // let consumer_key = env::var("API_SECRET").ok().expect("Missing API key");
+        // let consumer_secret = env::var("API_SECRET").ok().expect("Missing API secret");
+
+        /*  let consumer_key = consumer_key.trim();
+        let consumer_secret = consumer_secret.trim(); */
         //IMPORTANT: make an app for yourself at apps.twitter.com and get your
         //key/secret into these files; these examples won't work without them
         let consumer_key = include_str!("consumer_key").trim();
