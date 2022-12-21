@@ -6,10 +6,10 @@
 //that are unnecessary
 #![allow(dead_code)]
 
-use egg_mode;
-use std;
 use std::io::{Read, Write};
-
+extern crate dotenv;
+use dotenv::dotenv;
+// use std::env;
 pub use yansi::Paint;
 
 //This is not an example that can be built with cargo! This is some helper code for the other
@@ -35,6 +35,12 @@ impl Config {
     /// twitter_settings file. Idealy we would recurse, but that requires boxing
     /// the output which doesn't seem worthwhile
     async fn load_inner() -> Option<Self> {
+        dotenv().ok();
+        // let consumer_key = env::var("API_SECRET").ok().expect("Missing API key");
+        // let consumer_secret = env::var("API_SECRET").ok().expect("Missing API secret");
+
+        /*  let consumer_key = consumer_key.trim();
+        let consumer_secret = consumer_secret.trim(); */
         //IMPORTANT: make an app for yourself at apps.twitter.com and get your
         //key/secret into these files; these examples won't work without them
         let consumer_key = include_str!("consumer_key").trim();
@@ -54,7 +60,7 @@ impl Config {
             let mut iter = config.split('\n');
 
             username = iter.next().unwrap().to_string();
-            user_id = u64::from_str_radix(&iter.next().unwrap(), 10).unwrap();
+            user_id = u64::from_str_radix(iter.next().unwrap(), 10).unwrap();
             let access_token = egg_mode::KeyPair::new(
                 iter.next().unwrap().to_string(),
                 iter.next().unwrap().to_string(),
@@ -81,7 +87,7 @@ impl Config {
 
             let mut pin = String::new();
             std::io::stdin().read_line(&mut pin).unwrap();
-            println!("");
+            println!();
 
             let tok_result = egg_mode::auth::access_token(con_token, &request_token, pin)
                 .await
@@ -116,8 +122,8 @@ impl Config {
         //TODO: Is there a better way to query whether a file exists?
         if std::fs::metadata("twitter_settings").is_ok() {
             Some(Config {
-                token: token,
-                user_id: user_id,
+                token,
+                user_id,
                 screen_name: username,
             })
         } else {
