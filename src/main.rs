@@ -1,3 +1,4 @@
+
 use egg_mode::tweet::DraftTweet;
 use rand::prelude::*;
 extern crate cronjob;
@@ -9,17 +10,18 @@ mod tweets;
 async fn main() /* -> Result<(), Box<dyn std::error::Error>>  */
 {
     // create a new cron job handler
-    let hours = "16"; // 10:00AM;
+    let hours = "16"; // 4:00AM;
     let seconds = "0";
-    let minutes = "45";
+    // let minutes = "45";
     let mut cron_job = CronJob::new("Update Twitter Status", handle_task);
     cron_job.offset(1);
     cron_job.seconds(seconds);
-    cron_job.minutes(minutes);
+    // cron_job.minutes(minutes);
     cron_job.hours(hours);
     cron_job.start_job();
-    let result = dispatch_tweets().await.ok();
-    println!("success {} ", Some(result).is_none())
+    dispatch_tweets().await.ok();
+
+    // println!("success {} ", Some(result).is_none())
 }
 
 async fn dispatch_tweets() -> Result<(), Box<dyn std::error::Error>> {
@@ -53,7 +55,7 @@ quote from #raven
     println!("{:?}", tweet);
     // Twitter SDK configuration
     let config = config::Config::load().await;
-    tweet.send(&config.token).await?;
+    // tweet.send(&config.token).await?;
     // https://github.com/opeolluwa/raven
 
     Ok(())
@@ -63,3 +65,4 @@ fn handle_task(argz: &str) {
     // plug in dispatch tweets here
     println!("hey {:?}", argz);
 }
+
